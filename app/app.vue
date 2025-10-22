@@ -19,6 +19,7 @@
           <input
               type="checkbox"
               v-model="task.done"
+              @change="toggleDone(task)"
           > {{ task.title }}
 
           <button @click="deleteTask(task.id)">Remove task</button>
@@ -46,6 +47,8 @@ const newTask = reactive<NewTask>({
   done: false,
 });
 const tasks = ref<Array<Task>>([]);
+
+const isChecked = ref(false)
 
 const { data: tasksData } = await useLazyFetch("http://localhost:5000/tasks");
 
@@ -80,5 +83,14 @@ const deleteTask = async (id: string) => {
   } catch (error) {
     console.log(error)
   }
+}
+
+const toggleDone = async (task: Task) => {
+  const res = await $fetch(`http://localhost:5000/tasks/${ task.id }`, {
+    method: "PATCH",
+    body: {
+      done: task.done
+    }
+  })
 }
 </script>
