@@ -1,4 +1,7 @@
 <template>
+  <Head>
+    <Title>To do app</Title>
+  </Head>
   <div>
     <div>
       <h1>To Do List</h1>
@@ -9,6 +12,9 @@
              v-model="newTask.title"
       >
       <button @click="storeTask">Add task</button>
+    </div>
+    <div v-if="error">
+      {{ error }}
     </div>
     <div>
       <div>
@@ -30,7 +36,6 @@
 </template>
 
 <script setup lang="ts">
-
 interface Task {
   id: string;
   title: string;
@@ -48,9 +53,10 @@ const newTask = reactive<NewTask>({
 });
 const tasks = ref<Array<Task>>([]);
 
-const isChecked = ref(false)
+const error = ref<string | null>(null);
 
 const { data: tasksData } = await useLazyFetch("http://localhost:5000/tasks");
+
 
 tasks.value = tasksData.value
 
@@ -67,8 +73,10 @@ const storeTask = async () => {
       }
     })
     tasks.value.push(res);
-  } catch (error) {
-    console.log(error)
+  } catch (e) {
+    if(e.message.includes("NetworkError")) {
+      error.value = "Server is unavailable at the moment. Try again later.";
+    }
   }
 
   newTask.title = ""
