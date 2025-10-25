@@ -95,11 +95,8 @@ import CheckIcon from "~/icons/CheckIcon.vue";
 
 import type { Task, NewTask } from "@/types/task"
 
-onMounted(() => {
-  getTasks();
-})
-
 onMounted(async () => {
+  await getTasks();
   await nextTick();
   showTitle.value = true
   showTask.value = true
