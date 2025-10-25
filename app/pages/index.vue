@@ -37,7 +37,9 @@
               <input type="checkbox" v-model="task.done" @change="toggleDone(task)">
               <h3 class="text-2xl font-medium"
                   :class="task.done ? 'text-gray-400 line-through transition-all duration-100' : 'text-gray-900 transition-all duration-100'"
-                  v-if="!task.editable">
+                  v-if="!task.editable"
+                  @dblclick="editTask(task)"
+              >
                 {{ task.title }}
               </h3>
               <input type="text"
@@ -94,12 +96,12 @@ interface NewTask {
 
 onMounted(() => {
   getTasks();
-  setTimeout(() => {
-    showTitle.value = true
-  }, 10);
-  setTimeout(() => {
-    showTask.value = true
-  }, 10)
+})
+
+onMounted(async () => {
+  await nextTick();
+  showTitle.value = true
+  showTask.value = true
 })
 
 const newTask = reactive<NewTask>({
@@ -180,7 +182,7 @@ const deleteTask = async (id: string) => {
     const res = await $fetch(`http://localhost:5000/tasks/${ id }`, {
       method: "DELETE",
     })
-    tasks.value = tasks.value.filter(t => t.id !== id)
+    tasks.value = tasks.value.filter(task => task.id !== id)
   } catch (e) {
     error.value = "Could not delete task"
   }
@@ -193,12 +195,11 @@ input[type="checkbox"] {
 }
 
 input {
-  outline: none;
+  @apply outline-none;
 }
 
 input[type="checkbox"]:checked {
-  outline: none;
-  accent-color: bisque;
+  @apply outline-none accent-emerald-400;
 }
 
 * {
@@ -236,31 +237,27 @@ input[type="checkbox"]:checked {
 
 
 .title-slide-enter-active {
-  transition: all .5s ease
+  @apply transition-all duration-500 ease-in-out;
 }
 
 .title-slide-enter-from {
-  opacity: 0;
-  transform: translateY(-30px);
+  @apply opacity-0 -translate-y-8;
 }
 
 .title-slide-leave-to {
-  opacity: 1;
-  transform: translateY(0);
+  @apply opacity-100 translate-y-0;
 }
 
 
 .task-enter-active {
-  transition: all 1s ease
+  @apply transition-all duration-1000 ease-in-out;
 }
 
 .task-enter-from {
-  opacity: 0;
-  transform: translateX(30px);
+  @apply opacity-0 -translate-x-8;
 }
 
 .task-leave-to {
-  opacity: 1;
-  transform: translateX(0);
+  @apply opacity-100 translate-x-0;
 }
 </style>
