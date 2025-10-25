@@ -3,9 +3,10 @@
     <Title>To do app</Title>
     <Body class="bg-slate-50"></Body>
   </Head>
-  <div class="relative">
+  <div class="relative min-h-screen">
+
     <Transition name="slide-fade">
-      <div class="absolute right-0 bg-red-600 p-4 rounded-l-md max-w-2/12" v-if="error">
+      <div class="absolute right-0 top-12 bg-red-600 p-4 rounded-l-md max-w-2/12" v-if="error">
         <h3 class="text-md text-white font-semibold">{{ error }}</h3>
       </div>
     </Transition>
@@ -13,26 +14,29 @@
     <div class="flex flex-col gap-8 w-2/4 mx-auto relative">
       <Transition name="title-slide">
         <div class="mt-12" v-if="showTitle">
-          <h1 class="text-center text-5xl font-bold">To Do List</h1>
+          <h1 class="text-center text-5xl font-bold title">To Do List</h1>
         </div>
       </Transition>
+
       <Transition name="task">
         <div class="flex justify-between items-center bg-white px-4 py-4 rounded-md shadow-md" v-if="showTask">
           <input type="text" @keyup.enter="storeTask" placeholder="Enter new task" v-model="newTask.title"
                  @input="error = null"
                  class="border border-gray-400 w-10/12 rounded-md py-2 h-10 pl-4">
-          <button @click="storeTask" class="w-max bg-blue-400 text-white rounded-md h-10 px-6 font-semibold">Add task
+          <button @click="storeTask" class="w-max bg-slate-700 text-white rounded-md h-10 px-6 font-normal uppercase">
+            Add task
           </button>
         </div>
       </Transition>
+
       <div class="flex flex-col gap-4">
         <TransitionGroup name="list">
           <div v-for="task in tasks" :key="task.id"
                class="flex items-center justify-between bg-white px-4 py-2 rounded-md shadow-md">
-            <div class="flex gap-4 items-center w-full">
+            <div class="flex gap-4 items-center w-full mr-2">
               <input type="checkbox" v-model="task.done" @change="toggleDone(task)">
               <h3 class="text-2xl font-medium"
-                  :class="task.done ? 'text-gray-400 line-through' : 'text-gray-900'"
+                  :class="task.done ? 'text-gray-400 line-through transition-all duration-100' : 'text-gray-900 transition-all duration-100'"
                   v-if="!task.editable">
                 {{ task.title }}
               </h3>
@@ -44,7 +48,7 @@
                      placeholder="Edit your task"
                      class="text-2xl font-medium w-9/12"
                      autofocus
-                    @keyup.enter="updateTask(task)"
+                     @keyup.enter="updateTask(task)"
               >
             </div>
             <div class="flex gap-2 items-center" v-if="!task.editable">
@@ -123,7 +127,7 @@ const storeTask = async () => {
   if (!title) {
     error.value = "Enter task name"
     return;
-  } else error.value = title;
+  } else error.value = null;
 
   try {
     const res = await $fetch(`http://localhost:5000/tasks`, {
@@ -197,6 +201,14 @@ input[type="checkbox"]:checked {
   accent-color: bisque;
 }
 
+* {
+  font-family: "Anton", sans-serif;
+}
+
+.title {
+  font-family: 'Bungee', sans-serif;
+}
+
 .slide-fade-enter-active {
   @apply transition-all duration-500 ease-out;
 }
@@ -221,7 +233,6 @@ input[type="checkbox"]:checked {
 .list-enter-from, .list-leave-to {
   @apply transform -translate-x-24 opacity-0;
 }
-
 
 
 .title-slide-enter-active {
