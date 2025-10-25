@@ -1,3 +1,14 @@
 {
-  "tasks": []
+  "tasks": [
+    {
+      "id": "00f0",
+      "title": "Task 1",
+      "done": false
+    },
+    {
+      "id": "d490",
+      "title": "Task 2",
+      "done": false
+    }
+  ]
 }

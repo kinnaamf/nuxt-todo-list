@@ -5,22 +5,10 @@
   </Head>
   <div class="relative min-h-screen">
 
-    <!--    <Transition name="slide-fade">-->
-    <!--      <div class="absolute right-0 top-12 bg-red-600 p-4 rounded-l-md max-w-2/12" v-if="error">-->
-    <!--        <h3 class="text-md text-white font-medium">{{ error }}</h3>-->
-    <!--      </div>-->
-    <!--    </Transition>-->
-
-    <!--    <Transition name="slide-fade">-->
-    <!--      <div class="absolute right-0 top-12 bg-emerald-600 p-4 rounded-l-md max-w-2/12" v-if="message">-->
-    <!--        <h3 class="text-md text-white font-medium">{{ message }}</h3>-->
-    <!--      </div>-->
-    <!--    </Transition>-->
-
     <Transition name="slide-fade">
       <div class="absolute right-0 top-12 p-4 rounded-l-md max-w-2/12 text-white"
            :class="messageClass"
-           v-if="message.title">
+           v-if="isVisible">
         {{ message.title }}
       </div>
     </Transition>
@@ -39,7 +27,7 @@
                  @keyup.enter="storeTask"
                  placeholder="Enter new task"
                  v-model="newTask.title"
-                 @input="error = null"
+                 @input="isVisible = false"
                  class="border border-gray-400 w-10/12 rounded-md py-2 h-10 pl-4">
           <button @click="storeTask" class="w-max bg-slate-700 text-white rounded-md h-10 px-6 font-normal uppercase">
             Add task
@@ -50,7 +38,8 @@
       <div class="flex flex-col gap-4">
         <TransitionGroup name="list">
           <div v-for="task in tasks" :key="task.id"
-               class="flex items-center justify-between bg-white px-4 py-2 rounded-md shadow-md">
+               class="flex items-center justify-between bg-white px-4 py-2 rounded-md shadow-md"
+              :class="task.editable ? 'ring-2 ring-emerald-400 transition-all duration-150' : 'transition-all duration-150'">
             <div class="flex gap-4 items-center w-full mr-2">
 
               <input type="checkbox" v-model="task.done" @change="toggleDone(task)">
@@ -72,18 +61,19 @@
 
             <div class="flex gap-2 items-center">
 
-              <button @click="editTask(task)" class="bg-green-600 text-white p-2 rounded-md" v-if="!task.editable">
+              <button @click="editTask(task)" aria-label="Edit Task" class="bg-green-600 text-white p-2 rounded-md" v-if="!task.editable">
                 <PencilIcon/>
               </button>
-              <button @click="deleteTask(task.id)" class="bg-red-500 text-white p-2 rounded-md" v-if="!task.editable">
+              <button @click="deleteTask(task.id)" aria-label="Delete Task" class="bg-red-500 text-white p-2 rounded-md" v-if="!task.editable">
                 <TrashIcon/>
               </button>
 
 
-              <button @click="updateTask(task)" class="bg-green-600 text-white p-2 rounded-md" v-if="task.editable">
+              <button @click="updateTask(task)" aria-label="Update Task" class="bg-green-600 text-white p-2 rounded-md" v-if="task.editable">
                 <CheckIcon/>
               </button>
-              <button @click="task.editable = !task.editable"
+              <button @click="task.editable = !task.editable; task.title = task.originalTitle"
+                      aria-label="Close edit menu"
                       class="bg-red-500 text-white p-2 rounded-md"
                       v-if="task.editable">
                 <CloseIcon/>
@@ -107,6 +97,7 @@ interface Task {
   id: string;
   title: string;
   done: boolean;
+  originalTitle?: string;
   editable?: boolean;
 }
 
@@ -135,10 +126,11 @@ const showTask = ref<boolean>(false);
 
 const tasks = ref<Array<Task>>([]);
 
-const message = reactive({
+const message = reactive<{ title: string | null; status: "success" | "error" | null }>({
   title: null,
-  status: "success" | "error",
+  status: null
 })
+const isVisible = ref(false)
 
 const taskDone = (task: Task) => {
   return task.done ? 'text-gray-400 line-through transition-all duration-100' : 'text-gray-900 transition-all duration-100'
@@ -147,6 +139,16 @@ const taskDone = (task: Task) => {
 const messageClass = computed(() => {
   return message.status == "success" ? 'bg-emerald-600' : 'bg-red-600';
 })
+
+const showMessage = (title: string, status: string) => {
+
+  Object.assign(message, { title, status });
+  isVisible.value = true
+
+  setTimeout(() => {
+    isVisible.value = false
+  }, 2500)
+}
 
 const getTasks = async () => {
   try {
@@ -162,10 +164,7 @@ const getTasks = async () => {
 const storeTask = async () => {
   const title = newTask.title.trim()
   if (!title) {
-    Object.assign(message, {
-      title: "Enter task name",
-      status: "error",
-    })
+    showMessage("Enter task name", "error")
     return;
   }
 
@@ -179,16 +178,11 @@ const storeTask = async () => {
     })
     tasks.value.push(res);
     nextTick(() => document.querySelector('#task--title').focus())
-    Object.assign(message, {
-      title: "Task added successfully",
-      status: "success",
-    })
+
+    showMessage("Task added!", "success")
   } catch (e: any) {
     if (e.message.includes("NetworkError")) {
-      Object.assign(message, {
-        title: "Server is unavailable at the moment. Try again later",
-        status: "error",
-      })
+      showMessage("Network Error", "error")
     }
   }
 
@@ -196,10 +190,15 @@ const storeTask = async () => {
 }
 
 const editTask = async (task: Task) => {
+  task.originalTitle = task.title
   task.editable = true;
 }
 
 const updateTask = async (task: Task) => {
+  if(task.title.trim() === task.originalTitle?.trim()) {
+    task.editable = false;
+    return;
+  }
   try {
     const res = await $fetch(`http://localhost:5000/tasks/${ task.id }`, {
       method: "PATCH",
@@ -207,16 +206,11 @@ const updateTask = async (task: Task) => {
         title: task.title
       }
     })
-    task.editable = false;
-    Object.assign(message, {
-      title: "Task edited successfully",
-      status: "success",
-    })
+    task.editable = false
+    showMessage("Task updated successfully", "success")
+
   } catch (e) {
-    Object.assign(message, {
-      title: "Could not update data",
-      status: "error",
-    })
+    showMessage("Could not update task", "error")
   }
 }
 
@@ -235,15 +229,9 @@ const deleteTask = async (id: string) => {
       method: "DELETE",
     })
     tasks.value = tasks.value.filter(task => task.id !== id)
-    Object.assign(message, {
-      title: "Task deleted successfully",
-      status: "success",
-    })
+    showMessage("Task deleted!", "success")
   } catch (e) {
-    Object.assign(message, {
-      title: "Could not delete task",
-      status: "error",
-    })
+    showMessage("Could not delete task", "error")
   }
 }
 </script>
@@ -277,8 +265,12 @@ input[type="checkbox"]:checked {
   @apply transition-all duration-500 ease-in;
 }
 
-.slide-fade-enter-from, .slide-fade-leave-to {
+.slide-fade-enter-from {
   @apply transform translate-x-4 opacity-0;
+}
+
+.slide-fade-leave-to {
+  @apply transform translate-x-12 opacity-0;
 }
 
 
