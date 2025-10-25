@@ -93,18 +93,7 @@ import TrashIcon from "~/icons/TrashIcon.vue";
 import CloseIcon from "~/icons/CloseIcon.vue";
 import CheckIcon from "~/icons/CheckIcon.vue";
 
-interface Task {
-  id: string;
-  title: string;
-  done: boolean;
-  originalTitle?: string;
-  editable?: boolean;
-}
-
-interface NewTask {
-  title: string;
-  done: boolean;
-}
+import type { Task, NewTask } from "@/types/task"
 
 onMounted(() => {
   getTasks();
@@ -141,7 +130,6 @@ const messageClass = computed(() => {
 })
 
 const showMessage = (title: string, status: string) => {
-
   Object.assign(message, { title, status });
   isVisible.value = true
 
