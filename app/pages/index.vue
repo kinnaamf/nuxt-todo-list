@@ -22,16 +22,8 @@
 
       <Transition name="task">
         <div class="flex justify-between items-center bg-white px-4 py-4 rounded-md shadow-md" v-if="showTask">
-          <input id="task--title"
-                 type="text"
-                 @keyup.enter="storeTask"
-                 placeholder="Enter new task"
-                 v-model="newTask.title"
-                 @input="isVisible = false"
-                 class="border border-gray-400 w-10/12 rounded-md py-2 h-10 pl-4">
-          <button @click="storeTask" class="w-max bg-slate-700 text-white rounded-md h-10 px-6 font-normal uppercase">
-            Add task
-          </button>
+          <TaskInput :newTask="newTask" :is-visible="isVisible" @store-task="storeTask" />
+          <AddTask @store-task="storeTask"></AddTask>
         </div>
       </Transition>
 
@@ -39,7 +31,7 @@
         <TransitionGroup name="list">
           <div v-for="task in tasks" :key="task.id"
                class="flex items-center justify-between bg-white px-4 py-2 rounded-md shadow-md"
-              :class="task.editable ? 'ring-2 ring-emerald-400 transition-all duration-150' : 'transition-all duration-150'">
+               :class="task.editable ? 'ring-2 ring-emerald-400 transition-all duration-150' : 'transition-all duration-150'">
             <div class="flex gap-4 items-center w-full mr-2">
 
               <input type="checkbox" v-model="task.done" @change="toggleDone(task)">
@@ -61,15 +53,24 @@
 
             <div class="flex gap-2 items-center">
 
-              <button @click="editTask(task)" aria-label="Edit Task" class="bg-green-600 text-white p-2 rounded-md" v-if="!task.editable">
+              <button @click="editTask(task)"
+                      aria-label="Edit Task"
+                      class="bg-green-600 text-white p-2 rounded-md"
+                      v-if="!task.editable">
                 <PencilIcon/>
               </button>
-              <button @click="deleteTask(task.id)" aria-label="Delete Task" class="bg-red-500 text-white p-2 rounded-md" v-if="!task.editable">
+              <button @click="deleteTask(task.id)"
+                      aria-label="Delete Task"
+                      class="bg-red-500 text-white p-2 rounded-md"
+                      v-if="!task.editable">
                 <TrashIcon/>
               </button>
 
 
-              <button @click="updateTask(task)" aria-label="Update Task" class="bg-green-600 text-white p-2 rounded-md" v-if="task.editable">
+              <button @click="updateTask(task)"
+                      aria-label="Update Task"
+                      class="bg-green-600 text-white p-2 rounded-md"
+                      v-if="task.editable">
                 <CheckIcon/>
               </button>
               <button @click="task.editable = !task.editable; task.title = task.originalTitle"
@@ -93,7 +94,8 @@ import TrashIcon from "~/icons/TrashIcon.vue";
 import CloseIcon from "~/icons/CloseIcon.vue";
 import CheckIcon from "~/icons/CheckIcon.vue";
 
-import type { Task, NewTask } from "@/types/task"
+import type { Task, NewTask } from "~/types/task"
+import AddTask from "~/components/task/AddTask.vue";
 
 onMounted(async () => {
   await getTasks();
@@ -180,7 +182,7 @@ const editTask = async (task: Task) => {
 }
 
 const updateTask = async (task: Task) => {
-  if(task.title.trim() === task.originalTitle?.trim()) {
+  if (task.title.trim() === task.originalTitle?.trim()) {
     task.editable = false;
     return;
   }
