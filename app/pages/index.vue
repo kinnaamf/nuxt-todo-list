@@ -23,66 +23,12 @@
       <Transition name="task">
         <div class="flex justify-between items-center bg-white px-4 py-4 rounded-md shadow-md" v-if="showTask">
           <TaskInput :newTask="newTask" :is-visible="isVisible" @store-task="storeTask" />
-          <AddTask @store-task="storeTask"></AddTask>
+          <TaskButton @store-task="storeTask"></TaskButton>
         </div>
       </Transition>
 
       <div class="flex flex-col gap-4">
-        <TransitionGroup name="list">
-          <div v-for="task in tasks" :key="task.id"
-               class="flex items-center justify-between bg-white px-4 py-2 rounded-md shadow-md"
-               :class="task.editable ? 'ring-2 ring-emerald-400 transition-all duration-150' : 'transition-all duration-150'">
-            <div class="flex gap-4 items-center w-full mr-2">
-
-              <input type="checkbox" v-model="task.done" @change="toggleDone(task)">
-
-              <h3 class="text-2xl font-medium" :class="taskDone(task)" v-if="!task.editable" @dblclick="editTask(task)">
-                {{ task.title }}
-              </h3>
-              <input type="text"
-                     name="edit"
-                     id="edit"
-                     v-model="task.title"
-                     v-if="task.editable"
-                     placeholder="Edit your task"
-                     class="text-2xl font-medium w-9/12"
-                     autofocus
-                     @keyup.enter="updateTask(task)"
-              >
-            </div>
-
-            <div class="flex gap-2 items-center">
-
-              <button @click="editTask(task)"
-                      aria-label="Edit Task"
-                      class="bg-green-600 text-white p-2 rounded-md"
-                      v-if="!task.editable">
-                <PencilIcon/>
-              </button>
-              <button @click="deleteTask(task.id)"
-                      aria-label="Delete Task"
-                      class="bg-red-500 text-white p-2 rounded-md"
-                      v-if="!task.editable">
-                <TrashIcon/>
-              </button>
-
-
-              <button @click="updateTask(task)"
-                      aria-label="Update Task"
-                      class="bg-green-600 text-white p-2 rounded-md"
-                      v-if="task.editable">
-                <CheckIcon/>
-              </button>
-              <button @click="task.editable = !task.editable; task.title = task.originalTitle"
-                      aria-label="Close edit menu"
-                      class="bg-red-500 text-white p-2 rounded-md"
-                      v-if="task.editable">
-                <CloseIcon/>
-              </button>
-
-            </div>
-          </div>
-        </TransitionGroup>
+        <TaskList :tasks="tasks" @edit-task="editTask" @update-task="updateTask" @toggle-done="toggleDone" @delete-task="deleteTask" />
       </div>
     </div>
   </div>
@@ -95,7 +41,8 @@ import CloseIcon from "~/icons/CloseIcon.vue";
 import CheckIcon from "~/icons/CheckIcon.vue";
 
 import type { Task, NewTask } from "~/types/task"
-import AddTask from "~/components/task/AddTask.vue";
+import TaskButton from "~/components/task/TaskButton.vue";
+import TaskList from "~/components/task/TaskList.vue";
 
 onMounted(async () => {
   await getTasks();
@@ -119,10 +66,6 @@ const message = reactive<{ title: string | null; status: "success" | "error" | n
   status: null
 })
 const isVisible = ref(false)
-
-const taskDone = (task: Task) => {
-  return task.done ? 'text-gray-400 line-through transition-all duration-100' : 'text-gray-900 transition-all duration-100'
-}
 
 const messageClass = computed(() => {
   return message.status == "success" ? 'bg-emerald-600' : 'bg-red-600';
@@ -224,22 +167,6 @@ const deleteTask = async (id: string) => {
 </script>
 
 <style lang="postcss" scoped>
-input[type="checkbox"] {
-  @apply w-6 h-6;
-}
-
-input {
-  @apply outline-none;
-}
-
-input[type="checkbox"]:checked {
-  @apply outline-none accent-emerald-400;
-}
-
-* {
-  font-family: "Anton", sans-serif;
-}
-
 .title {
   font-family: 'Bungee', sans-serif;
 }
