@@ -6,15 +6,19 @@ import PencilIcon from "~/icons/PencilIcon.vue";
 import TrashIcon from "~/icons/TrashIcon.vue";
 import type { Task } from "~/types/task";
 
-defineProps<{task: Task}>();
+defineProps<{ task: Task }>();
 defineEmits(['editTask', 'updateTask', 'toggleDone', 'deleteTask']);
 
 const taskDone = (task: Task) => {
   return task.done ? 'text-gray-400 line-through transition-all duration-100' : 'text-gray-900 transition-all duration-100'
 }
 
-const successBtnClass = computed(() => {return 'bg-green-600 text-white p-2 rounded-md'})
-const dangerBtnClass = computed(() => {return 'bg-red-600 text-white p-2 rounded-md'})
+const successBtnClass = computed(() => {
+  return 'bg-green-600 text-white p-2 rounded-md'
+})
+const dangerBtnClass = computed(() => {
+  return 'bg-red-600 text-white p-2 rounded-md'
+})
 </script>
 
 <template>

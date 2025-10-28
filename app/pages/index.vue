@@ -35,14 +35,8 @@
 </template>
 
 <script setup lang="ts">
-import PencilIcon from "~/icons/PencilIcon.vue";
-import TrashIcon from "~/icons/TrashIcon.vue";
-import CloseIcon from "~/icons/CloseIcon.vue";
-import CheckIcon from "~/icons/CheckIcon.vue";
-
-import type { Task, NewTask } from "~/types/task"
-import TaskButton from "~/components/task/TaskButton.vue";
-import TaskList from "~/components/task/TaskList.vue";
+import TaskButton from '~/components/task/TaskButton.vue';
+import TaskList from '~/components/task/TaskList.vue';
 
 onMounted(async () => {
   await getTasks();
@@ -51,119 +45,14 @@ onMounted(async () => {
   showTask.value = true
 })
 
-const newTask = reactive<NewTask>({
-  title: "",
-  done: false,
-});
+const { tasks, message, isVisible, newTask, showMessage, getTasks, storeTask, editTask, updateTask, toggleDone, deleteTask } = useTask()
 
 const showTitle = ref<boolean>(false);
 const showTask = ref<boolean>(false);
 
-const tasks = ref<Array<Task>>([]);
-
-const message = reactive<{ title: string | null; status: "success" | "error" | null }>({
-  title: null,
-  status: null
-})
-const isVisible = ref(false)
-
 const messageClass = computed(() => {
-  return message.status == "success" ? 'bg-emerald-600' : 'bg-red-600';
+  return message.status == 'success' ? 'bg-emerald-600' : 'bg-red-600';
 })
-
-const showMessage = (title: string, status: string) => {
-  Object.assign(message, { title, status });
-  isVisible.value = true
-
-  setTimeout(() => {
-    isVisible.value = false
-  }, 2500)
-}
-
-const getTasks = async () => {
-  try {
-    tasks.value = await $fetch("http://localhost:5000/tasks");
-  } catch (e) {
-    Object.assign(message, {
-      title: "Could not fetch data",
-      status: "error",
-    })
-  }
-}
-
-const storeTask = async () => {
-  const title = newTask.title.trim()
-  if (!title) {
-    showMessage("Enter task name", "error")
-    return;
-  }
-
-  try {
-    const res = await $fetch(`http://localhost:5000/tasks`, {
-      method: 'POST',
-      body: {
-        title: newTask.title,
-        done: newTask.done
-      }
-    })
-    tasks.value.push(res);
-    nextTick(() => document.querySelector('#task--title').focus())
-
-    showMessage("Task added!", "success")
-  } catch (e: any) {
-    if (e.message.includes("NetworkError")) {
-      showMessage("Network Error", "error")
-    }
-  }
-
-  newTask.title = ""
-}
-
-const editTask = async (task: Task) => {
-  task.originalTitle = task.title
-  task.editable = true;
-}
-
-const updateTask = async (task: Task) => {
-  if (task.title.trim() === task.originalTitle?.trim()) {
-    task.editable = false;
-    return;
-  }
-  try {
-    const res = await $fetch(`http://localhost:5000/tasks/${ task.id }`, {
-      method: "PATCH",
-      body: {
-        title: task.title
-      }
-    })
-    task.editable = false
-    showMessage("Task updated successfully", "success")
-
-  } catch (e) {
-    showMessage("Could not update task", "error")
-  }
-}
-
-const toggleDone = async (task: Task) => {
-  const res = await $fetch(`http://localhost:5000/tasks/${ task.id }`, {
-    method: "PATCH",
-    body: {
-      done: task.done
-    }
-  })
-}
-
-const deleteTask = async (id: string) => {
-  try {
-    const res = await $fetch(`http://localhost:5000/tasks/${ id }`, {
-      method: "DELETE",
-    })
-    tasks.value = tasks.value.filter(task => task.id !== id)
-    showMessage("Task deleted!", "success")
-  } catch (e) {
-    showMessage("Could not delete task", "error")
-  }
-}
 </script>
 
 <style lang="postcss" scoped>
@@ -187,7 +76,6 @@ const deleteTask = async (id: string) => {
   @apply transform translate-x-12 opacity-0;
 }
 
-
 .list-enter-active {
   @apply transition-all duration-500 ease-out;
 }
@@ -199,7 +87,6 @@ const deleteTask = async (id: string) => {
 .list-enter-from, .list-leave-to {
   @apply transform -translate-x-24 opacity-0;
 }
-
 
 .title-slide-enter-active {
   @apply transition-all duration-500 ease-in-out;
@@ -213,7 +100,6 @@ const deleteTask = async (id: string) => {
   @apply opacity-100 translate-y-0;
 }
 
-
 .task-enter-active {
   @apply transition-all duration-1000 ease-in-out;
 }
@@ -225,5 +111,4 @@ const deleteTask = async (id: string) => {
 .task-leave-to {
   @apply opacity-100 translate-x-0;
 }
-
 </style>
