@@ -26,6 +26,7 @@
       <div class="task-list">
         <TaskList :tasks="tasks" @edit-task="editTask" @update-task="updateTask" @toggle-done="toggleDone" @delete-task="deleteTask" />
       </div>
+
     </div>
   </main>
 </template>
@@ -42,7 +43,7 @@ onMounted(async () => {
   showTask.value = true
 })
 
-const { tasks, message, isVisible, newTask, showMessage, getTasks, storeTask, editTask, updateTask, toggleDone, deleteTask } = useTask()
+const { tasks, message, isVisible, newTask, getTasks, storeTask, editTask, updateTask, toggleDone, deleteTask } = useTask()
 
 const showTitle = ref<boolean>(false);
 const showTask = ref<boolean>(false);

@@ -69,4 +69,5 @@ const successBtnClass = computed(() => {
 const dangerBtnClass = computed(() => {
   return 'btn-danger'
 })
+
 </script>

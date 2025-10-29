@@ -15,6 +15,6 @@
 <script setup lang="ts">
 import type { Task } from "~/types/task";
 
-const {tasks} = defineProps<{ tasks: Task[] }>();
+const { tasks } = defineProps<{ tasks: Task[] }>();
 defineEmits(['editTask', 'updateTask', 'toggleDone', 'deleteTask']);
 </script>
