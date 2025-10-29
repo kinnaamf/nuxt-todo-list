@@ -1,13 +1,14 @@
 import type { Task, NewTask } from '~/types/task';
+import type { Message } from '~/types/message';
 
 const api_url = useRuntimeConfig().app.api;
 
 export const useTask = () => {
   const tasks = ref<Task[]>([]);
-  const message = reactive<{ title: string | null; status: 'success' | 'error' | null}>({
+  const message = reactive<Message>({
     title: null,
-    status: null,
-  })
+    status: null
+  });
 
   const isVisible = ref(false);
 
@@ -17,17 +18,17 @@ export const useTask = () => {
   });
 
   const showMessage = (title: string, status: string) => {
-    Object.assign(message, { title, status });
+    Object.assign(message, {title, status});
     isVisible.value = true
 
     setTimeout(() => {
       isVisible.value = false
-    }, 2500)
+    }, 1000)
   }
 
   const getTasks = async () => {
     try {
-      tasks.value = await $fetch(`${api_url}/tasks`);
+      tasks.value = await $fetch(`${ api_url }/tasks`);
     } catch (e) {
       Object.assign(message, {
         title: 'Could not fetch data',
@@ -37,14 +38,14 @@ export const useTask = () => {
   }
 
   const storeTask = async () => {
-    const title = newTask.title.trim()
+    const title = newTask.title?.trim()
     if (!title) {
       showMessage('Enter task name', 'error')
       return;
     }
 
     try {
-      const res = await $fetch(`${api_url}/tasks`, {
+      const res = await $fetch(`${ api_url }/tasks`, {
         method: 'POST',
         body: {
           title: newTask.title,
@@ -75,7 +76,7 @@ export const useTask = () => {
       return;
     }
     try {
-      const res = await $fetch(`${api_url}/tasks/${ task.id }`, {
+      const res = await $fetch(`${ api_url }/tasks/${ task.id }`, {
         method: 'PATCH',
         body: {
           title: task.title
@@ -91,7 +92,7 @@ export const useTask = () => {
 
   const toggleDone = async (task: Task) => {
     try {
-      const res = await $fetch(`${api_url}/tasks/${ task.id }`, {
+      const res = await $fetch(`${ api_url }/tasks/${ task.id }`, {
         method: 'PATCH',
         body: {
           done: task.done
@@ -104,7 +105,7 @@ export const useTask = () => {
 
   const deleteTask = async (id: string) => {
     try {
-      const res = await $fetch(`${api_url}/tasks/${ id }`, {
+      const res = await $fetch(`${ api_url }/tasks/${ id }`, {
         method: 'DELETE',
       })
       tasks.value = tasks.value?.filter(task => task.id !== id)
@@ -114,5 +115,17 @@ export const useTask = () => {
     }
   }
 
-  return { tasks, message, isVisible, newTask, showMessage, getTasks, storeTask, editTask, updateTask, toggleDone, deleteTask }
+  return {
+    tasks,
+    message,
+    isVisible,
+    newTask,
+    showMessage,
+    getTasks,
+    storeTask,
+    editTask,
+    updateTask,
+    toggleDone,
+    deleteTask
+  }
 }

@@ -7,6 +7,6 @@ export interface Task {
 }
 
 export interface NewTask {
-  title: string;
+  title: string | null;
   done: boolean;
 }
