@@ -1,9 +1,9 @@
 <template>
-  <div class="task-item-container">
+  <div class="task-item-container" @dblclick="$emit('editTask', task)">
 
     <input type="checkbox" v-model="task.done" @change="$emit('toggleDone', task)">
 
-    <h3 class="task-title" :class="taskDone(task)" v-if="!task.editable" @dblclick="$emit('editTask', task)">
+    <h3 class="task-title" :class="taskDone(task)" v-if="!task.editable">
       {{ task.title }}
     </h3>
     <input type="text"
