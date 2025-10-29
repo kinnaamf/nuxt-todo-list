@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import CheckIcon from "~/icons/CheckIcon.vue";
 import CloseIcon from "~/icons/CloseIcon.vue";
 import PencilIcon from "~/icons/PencilIcon.vue";
@@ -10,23 +9,23 @@ defineProps<{ task: Task }>();
 defineEmits(['editTask', 'updateTask', 'toggleDone', 'deleteTask']);
 
 const taskDone = (task: Task) => {
-  return task.done ? 'text-gray-400 line-through transition-all duration-100' : 'text-gray-900 transition-all duration-100'
+  return task.done ? 'task-done' : 'task-not-done';
 }
 
 const successBtnClass = computed(() => {
-  return 'bg-green-600 text-white p-2 rounded-md'
+  return 'btn-success'
 })
 const dangerBtnClass = computed(() => {
-  return 'bg-red-600 text-white p-2 rounded-md'
+  return 'btn-danger'
 })
 </script>
 
 <template>
-  <div class="flex gap-4 items-center w-full mr-2">
+  <div class="task-item-container">
 
     <input type="checkbox" v-model="task.done" @change="$emit('toggleDone', task)">
 
-    <h3 class="text-2xl font-medium" :class="taskDone(task)" v-if="!task.editable" @dblclick="$emit('editTask', task)">
+    <h3 class="task-title" :class="taskDone(task)" v-if="!task.editable" @dblclick="$emit('editTask', task)">
       {{ task.title }}
     </h3>
     <input type="text"
@@ -35,14 +34,13 @@ const dangerBtnClass = computed(() => {
            v-model="task.title"
            v-if="task.editable"
            placeholder="Edit your task"
-           class="text-2xl font-medium w-9/12"
+           class="task-edit-input"
            autofocus
-           style="outline: none"
            @keyup.enter="$emit('updateTask', task)"
     >
   </div>
 
-  <div class="flex gap-2 items-center">
+  <div class="btn-container">
 
     <button @click="$emit('editTask', task)"
             aria-label="Edit Task"
@@ -64,7 +62,7 @@ const dangerBtnClass = computed(() => {
             v-if="task.editable">
       <CheckIcon/>
     </button>
-    <button @click="task.editable = !task.editable; task.title = task.originalTitle"
+    <button @click="task.editable = false; task.title = task.originalTitle"
             aria-label="Close edit menu"
             :class="dangerBtnClass"
             v-if="task.editable">

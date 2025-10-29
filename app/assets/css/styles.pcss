@@ -1,0 +1,67 @@
+.main-container {
+    @apply relative min-h-screen;
+}
+
+.corner-notification {
+    @apply absolute right-0 top-12 p-4 rounded-l-md min-w-max text-white;
+}
+
+.app-container {
+    @apply flex flex-col gap-8 w-2/4 mx-auto relative;
+}
+
+.title {
+    @apply text-center text-5xl font-bold;
+    font-family: 'Bungee', sans-serif;
+}
+
+.task-container {
+    @apply flex justify-between items-center bg-white px-4 py-4 rounded-md shadow-md;
+}
+
+.task-list {
+    @apply flex flex-col gap-4;
+}
+
+.task-item {
+    @apply flex items-center justify-between bg-white px-4 py-2 rounded-md shadow-md transition-all duration-150;
+}
+
+.task-editable {
+    @apply ring-2 ring-emerald-400;
+}
+
+.btn-success {
+    @apply bg-green-600 text-white p-2 rounded-md;
+}
+
+.btn-danger {
+    @apply bg-red-600 text-white p-2 rounded-md;
+}
+.btn-container {
+    @apply flex gap-2 items-center;
+}
+
+.task-item-container {
+    @apply flex gap-4 items-center w-full mr-2;
+}
+
+.task-title {
+    @apply text-2xl font-medium transition-all duration-100;
+}
+
+.task-done {
+    @apply text-gray-400 line-through;
+}
+
+.task-edit-input {
+    @apply text-2xl font-medium w-9/12 outline-none;
+}
+
+.task-not-done {
+    @apply text-gray-900;
+}
+
+.task-done {
+
+}

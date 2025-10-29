@@ -3,6 +3,12 @@
 </template>
 
 <style>
+@import "~/assets/css/styles.pcss";
+
+* {
+  font-family: "Anton", sans-serif;
+}
+
 input[type="checkbox"] {
   @apply w-6 h-6;
 }
@@ -13,10 +19,6 @@ input {
 
 input[type="checkbox"]:checked {
   @apply outline-none accent-emerald-400;
-}
-
-* {
-  font-family: "Anton", sans-serif;
 }
 </style>
 <script setup lang="ts">

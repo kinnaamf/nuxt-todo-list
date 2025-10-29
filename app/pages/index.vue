@@ -3,35 +3,35 @@
     <Title>To do app</Title>
     <Body class="bg-slate-50"></Body>
   </Head>
-  <div class="relative min-h-screen">
+  <main class="main-container">
 
     <Transition name="slide-fade">
-      <div class="absolute right-0 top-12 p-4 rounded-l-md max-w-2/12 text-white"
+      <div class="corner-notification"
            :class="messageClass"
            v-if="isVisible">
         {{ message.title }}
       </div>
     </Transition>
 
-    <div class="flex flex-col gap-8 w-2/4 mx-auto relative">
+    <div class="app-container">
       <Transition name="title-slide">
         <div class="mt-12" v-if="showTitle">
-          <h1 class="text-center text-5xl font-bold title">To Do List</h1>
+          <h1 class="title">To Do List</h1>
         </div>
       </Transition>
 
       <Transition name="task">
-        <div class="flex justify-between items-center bg-white px-4 py-4 rounded-md shadow-md" v-if="showTask">
+        <div class="task-container" v-if="showTask">
           <TaskInput :newTask="newTask" :is-visible="isVisible" @store-task="storeTask" />
           <TaskButton @store-task="storeTask"></TaskButton>
         </div>
       </Transition>
 
-      <div class="flex flex-col gap-4">
+      <div class="task-list">
         <TaskList :tasks="tasks" @edit-task="editTask" @update-task="updateTask" @toggle-done="toggleDone" @delete-task="deleteTask" />
       </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script setup lang="ts">
@@ -56,10 +56,6 @@ const messageClass = computed(() => {
 </script>
 
 <style lang="postcss" scoped>
-.title {
-  font-family: 'Bungee', sans-serif;
-}
-
 .slide-fade-enter-active {
   @apply transition-all duration-500 ease-out;
 }
