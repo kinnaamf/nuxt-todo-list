@@ -56,5 +56,5 @@ const messageClass = computed(() => {
 </script>
 
 <style lang="postcss" scoped>
-@import "~/assets/css/transitions.pcss"
+@import "~/assets/css/transitions.pcss";
 </style>

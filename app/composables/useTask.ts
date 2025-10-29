@@ -1,11 +1,14 @@
 import type { Task, NewTask } from '~/types/task';
 
+const api_url = useRuntimeConfig().app.api;
+
 export const useTask = () => {
   const tasks = ref<Task[]>([]);
   const message = reactive<{ title: string | null; status: 'success' | 'error' | null}>({
     title: null,
     status: null,
   })
+
   const isVisible = ref(false);
 
   const newTask = reactive<NewTask>({
@@ -24,7 +27,7 @@ export const useTask = () => {
 
   const getTasks = async () => {
     try {
-      tasks.value = await $fetch('http://localhost:5000/tasks');
+      tasks.value = await $fetch(`${api_url}/tasks`);
     } catch (e) {
       Object.assign(message, {
         title: 'Could not fetch data',
@@ -41,7 +44,7 @@ export const useTask = () => {
     }
 
     try {
-      const res = await $fetch(`http://localhost:5000/tasks`, {
+      const res = await $fetch(`${api_url}/tasks`, {
         method: 'POST',
         body: {
           title: newTask.title,
@@ -72,7 +75,7 @@ export const useTask = () => {
       return;
     }
     try {
-      const res = await $fetch(`http://localhost:5000/tasks/${ task.id }`, {
+      const res = await $fetch(`${api_url}/tasks/${ task.id }`, {
         method: 'PATCH',
         body: {
           title: task.title
@@ -87,17 +90,21 @@ export const useTask = () => {
   }
 
   const toggleDone = async (task: Task) => {
-    const res = await $fetch(`http://localhost:5000/tasks/${ task.id }`, {
-      method: 'PATCH',
-      body: {
-        done: task.done
-      }
-    })
+    try {
+      const res = await $fetch(`${api_url}/tasks/${ task.id }`, {
+        method: 'PATCH',
+        body: {
+          done: task.done
+        }
+      })
+    } catch (e) {
+      showMessage('Could not toggle task', 'error')
+    }
   }
 
   const deleteTask = async (id: string) => {
     try {
-      const res = await $fetch(`http://localhost:5000/tasks/${ id }`, {
+      const res = await $fetch(`${api_url}/tasks/${ id }`, {
         method: 'DELETE',
       })
       tasks.value = tasks.value?.filter(task => task.id !== id)
