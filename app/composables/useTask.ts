@@ -1,9 +1,10 @@
 import type { Task, NewTask } from '~/types/task';
 import type { Message } from '~/types/message';
 
-const api_url = useRuntimeConfig().app.api;
-
 export const useTask = () => {
+  const config = useRuntimeConfig();
+  const api_url = config.app.api;
+
   const tasks = ref<Task[]>([]);
   const message = reactive<Message>({
     title: null,
