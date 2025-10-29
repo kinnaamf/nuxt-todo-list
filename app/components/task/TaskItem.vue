@@ -1,25 +1,3 @@
-<script setup lang="ts">
-import CheckIcon from "~/icons/CheckIcon.vue";
-import CloseIcon from "~/icons/CloseIcon.vue";
-import PencilIcon from "~/icons/PencilIcon.vue";
-import TrashIcon from "~/icons/TrashIcon.vue";
-import type { Task } from "~/types/task";
-
-defineProps<{ task: Task }>();
-defineEmits(['editTask', 'updateTask', 'toggleDone', 'deleteTask']);
-
-const taskDone = (task: Task) => {
-  return task.done ? 'task-done' : 'task-not-done';
-}
-
-const successBtnClass = computed(() => {
-  return 'btn-success'
-})
-const dangerBtnClass = computed(() => {
-  return 'btn-danger'
-})
-</script>
-
 <template>
   <div class="task-item-container">
 
@@ -36,8 +14,7 @@ const dangerBtnClass = computed(() => {
            placeholder="Edit your task"
            class="task-edit-input"
            autofocus
-           @keyup.enter="$emit('updateTask', task)"
-    >
+           @keyup.enter="$emit('updateTask', task)">
   </div>
 
   <div class="btn-container">
@@ -72,6 +49,24 @@ const dangerBtnClass = computed(() => {
   </div>
 </template>
 
-<style scoped lang="postcss">
+<script setup lang="ts">
+import CheckIcon from "~/icons/CheckIcon.vue";
+import CloseIcon from "~/icons/CloseIcon.vue";
+import PencilIcon from "~/icons/PencilIcon.vue";
+import TrashIcon from "~/icons/TrashIcon.vue";
+import type { Task } from "~/types/task";
 
-</style>
+defineProps<{ task: Task }>();
+defineEmits(['editTask', 'updateTask', 'toggleDone', 'deleteTask']);
+
+const taskDone = (task: Task) => {
+  return task.done ? 'task-done' : 'task-not-done';
+}
+
+const successBtnClass = computed(() => {
+  return 'btn-success'
+})
+const dangerBtnClass = computed(() => {
+  return 'btn-danger'
+})
+</script>
