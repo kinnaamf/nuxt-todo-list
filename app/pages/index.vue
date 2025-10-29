@@ -6,11 +6,7 @@
   <main class="main-container">
 
     <Transition name="slide-fade">
-      <div class="corner-notification"
-           :class="messageClass"
-           v-if="isVisible">
-        {{ message.title }}
-      </div>
+      <MessageToast v-if="isVisible" :message="message" :class="messageClass"/>
     </Transition>
 
     <div class="app-container">
@@ -37,6 +33,7 @@
 <script setup lang="ts">
 import TaskButton from '~/components/task/TaskButton.vue';
 import TaskList from '~/components/task/TaskList.vue';
+import MessageToast from "~/components/message/MessageToast.vue";
 
 onMounted(async () => {
   await getTasks();
