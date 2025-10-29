@@ -46,7 +46,7 @@ export const useTask = () => {
     }
 
     try {
-      const res = await $fetch(`${ api_url }/tasks`, {
+      const res: Task = await $fetch(`${ api_url }/tasks`, {
         method: 'POST',
         body: {
           title: newTask.title,
@@ -54,7 +54,12 @@ export const useTask = () => {
         }
       })
       tasks.value?.push(res);
-      await nextTick(() => document.querySelector('#task--title').focus())
+
+      // await nextTick(() => document.querySelector('#task--title')?.focus())
+
+      await nextTick();
+      const input = document.querySelector<HTMLInputElement>('#task--title');
+      input?.focus();
 
       showMessage('Task added!', 'success')
     } catch (e: any) {
