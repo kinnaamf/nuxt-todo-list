@@ -4,7 +4,9 @@
     <Body class="bg-slate-50"></Body>
   </Head>
   <main class="main-container">
-
+    <Transition name="bounce">
+      <Loader v-if="isLoading"/>
+    </Transition>
     <Transition name="slide-fade">
       <MessageToast v-if="isVisible" :message="message" :class="messageClass"/>
     </Transition>
@@ -28,6 +30,7 @@
       </div>
 
     </div>
+
   </main>
 </template>
 
@@ -43,7 +46,7 @@ onMounted(async () => {
   showTask.value = true
 })
 
-const { tasks, message, isVisible, newTask, getTasks, storeTask, editTask, updateTask, toggleDone, deleteTask } = useTask()
+const { tasks, message, isVisible, newTask, getTasks, storeTask, editTask, updateTask, toggleDone, deleteTask, isLoading } = useTask()
 
 const showTitle = ref<boolean>(false);
 const showTask = ref<boolean>(false);

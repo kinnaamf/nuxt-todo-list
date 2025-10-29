@@ -78,6 +78,39 @@ input[type="checkbox"]:checked {
     @apply text-gray-900;
 }
 
-.task-done {
+.loader-container {
+  @apply absolute min-h-screen w-screen opacity-80 z-10;
+  backdrop-filter: blur(10px);
+}
+.loader {
+  @apply absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center;
+}
 
+.spinner {
+  @apply w-16 h-16 border-8 border-black/10 rounded-full border-t-transparent inline-block box-border;
+  animation: spin 1s infinite ease-out;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.bounce-enter-active {
+  animation: bounce-in .5s ease-in-out;
+}
+.bounce-leave-active {
+  animation: bounce-in .5s ease-in-out;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0.5);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(0.1);
+  }
 }

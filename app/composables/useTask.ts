@@ -11,6 +11,8 @@ export const useTask = () => {
     status: null
   });
 
+  const isLoading = ref<boolean>(false);
+
   const isVisible = ref(false);
 
   const newTask = reactive<NewTask>({
@@ -19,7 +21,7 @@ export const useTask = () => {
   });
 
   const showMessage = (title: string, status: string) => {
-    Object.assign(message, {title, status});
+    Object.assign(message, { title, status });
     isVisible.value = true
 
     setTimeout(() => {
@@ -28,8 +30,11 @@ export const useTask = () => {
   }
 
   const getTasks = async () => {
+    isLoading.value = true;
+
     try {
       tasks.value = await $fetch(`${ api_url }/tasks`);
+      isLoading.value = false;
     } catch (e) {
       Object.assign(message, {
         title: 'Could not fetch data',
@@ -132,6 +137,7 @@ export const useTask = () => {
     editTask,
     updateTask,
     toggleDone,
-    deleteTask
+    deleteTask,
+    isLoading,
   }
 }
