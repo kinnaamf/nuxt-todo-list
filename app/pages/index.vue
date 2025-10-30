@@ -4,9 +4,11 @@
     <Body class="bg-slate-50"></Body>
   </Head>
   <main class="main-container">
-<!--    <Transition name="bounce">-->
-<!--      <Loader v-if="isLoading"/>-->
-<!--    </Transition>-->
+
+    <Transition name="bounce">
+      <Loader v-if="isLoading"/>
+    </Transition>
+
     <Transition name="slide-fade">
       <MessageToast v-if="isVisible" :message="message" :class="messageClass"/>
     </Transition>
@@ -18,15 +20,24 @@
         </div>
       </Transition>
 
-      <Transition name="task">
+      <TransitionGroup name="task">
         <div class="task-container" v-if="showTask">
-          <TaskInput :newTask="newTask" :is-visible="isVisible" @store-task="storeTask" />
+          <TaskInput :newTask="newTask" :is-visible="isVisible" @store-task="storeTask"/>
           <TaskButton @store-task="storeTask"></TaskButton>
+        </div>
+      </TransitionGroup>
+
+      <Transition name="empty">
+        <div v-if="showEmptyMessage">
+          <h3 class="is-empty">
+            Task list is empty
+          </h3>
         </div>
       </Transition>
 
       <div class="task-list">
-        <TaskList :tasks="tasks" @edit-task="editTask" @update-task="updateTask" @toggle-done="toggleDone" @delete-task="deleteTask" />
+        <TaskList :tasks="tasks" @edit-task="editTask" @update-task="updateTask" @toggle-done="toggleDone"
+                  @delete-task="deleteTask"/>
       </div>
 
     </div>
@@ -45,10 +56,14 @@ onMounted(async () => {
   showTask.value = true
 })
 
-const { tasks, message, isVisible, newTask, getTasks, storeTask, editTask, updateTask, toggleDone, deleteTask, isLoading } = useTask()
+const {
+  tasks, message, isVisible, newTask, getTasks, storeTask, editTask, updateTask, toggleDone, deleteTask, isLoading, isEmpty
+} = useTask()
 
 const showTitle = ref<boolean>(false);
 const showTask = ref<boolean>(false);
+
+const showEmptyMessage = computed(() => showTask.value && isEmpty.value && !isLoading.value);
 
 const messageClass = computed(() => {
   return message.status == 'success' ? 'bg-emerald-600' : 'bg-red-600';

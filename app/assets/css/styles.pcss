@@ -96,21 +96,6 @@ input[type="checkbox"]:checked {
   100% { transform: rotate(360deg); }
 }
 
-.bounce-enter-active {
-  animation: bounce-in .5s ease-in-out;
-}
-.bounce-leave-active {
-  animation: bounce-in .5s ease-in-out;
-}
-
-@keyframes bounce-in {
-  0% {
-    transform: scale(0.5);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(0.1);
-  }
+.is-empty {
+    @apply text-2xl font-semibold text-gray-500 -z-10;
 }

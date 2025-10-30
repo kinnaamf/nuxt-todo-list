@@ -20,8 +20,12 @@ export const useTask = () => {
     done: false,
   });
 
+  const isEmpty = computed(() => {
+    return tasks.value.length === 0;
+  })
+
   const showMessage = (title: string, status: string) => {
-    Object.assign(message, { title, status });
+    Object.assign(message, {title, status});
     isVisible.value = true
 
     setTimeout(() => {
@@ -139,5 +143,6 @@ export const useTask = () => {
     toggleDone,
     deleteTask,
     isLoading,
+    isEmpty
   }
 }
