@@ -1,6 +1,7 @@
 <template>
   <TransitionGroup name="list">
-    <div v-for="task in tasks" :key="task.id"
+    <div v-if="listAppend"
+         v-for="task in tasks" :key="task.id"
          class="task-item"
          :class="task.editable ? 'task-editable' : ''">
       <TaskItem :task="task"
@@ -15,6 +16,15 @@
 <script setup lang="ts">
 import type { Task } from "~/types/task";
 
+const listAppend = ref(false);
+
+onMounted(() => {
+  setTimeout(() => {
+    listAppend.value = true
+  }, 1)
+})
+
 const { tasks } = defineProps<{ tasks: Task[] }>();
 defineEmits(['editTask', 'updateTask', 'toggleDone', 'deleteTask']);
+
 </script>

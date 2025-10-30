@@ -7,5 +7,6 @@ export default defineNuxtConfig({
     app: {
       api: 'http://localhost:5000'
     }
-  }
+  },
+  css: ['~/assets/css/transitions.pcss', '~/assets/css/styles.pcss']
 })

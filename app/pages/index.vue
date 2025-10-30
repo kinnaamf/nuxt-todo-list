@@ -4,9 +4,9 @@
     <Body class="bg-slate-50"></Body>
   </Head>
   <main class="main-container">
-    <Transition name="bounce">
-      <Loader v-if="isLoading"/>
-    </Transition>
+<!--    <Transition name="bounce">-->
+<!--      <Loader v-if="isLoading"/>-->
+<!--    </Transition>-->
     <Transition name="slide-fade">
       <MessageToast v-if="isVisible" :message="message" :class="messageClass"/>
     </Transition>
@@ -30,7 +30,6 @@
       </div>
 
     </div>
-
   </main>
 </template>
 
