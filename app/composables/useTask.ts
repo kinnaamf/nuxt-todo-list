@@ -3,7 +3,7 @@ import type { Message } from '~/types/message';
 
 export const useTask = () => {
   const config = useRuntimeConfig();
-  const api_url = config.app.api;
+  const api_url = config.public.apiBase;
 
   const tasks = ref<Task[]>([]);
   const message = reactive<Message>({

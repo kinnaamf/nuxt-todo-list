@@ -4,8 +4,9 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', '@nuxt/fonts'],
   runtimeConfig: {
-    app: {
-      api: 'http://localhost:5000'
+    apiSecret: 'http://localhost:5000',
+    public: {
+      apiBase: 'http://localhost:5000',
     }
   },
   css: ['~/assets/css/transitions.pcss', '~/assets/css/styles.pcss']
