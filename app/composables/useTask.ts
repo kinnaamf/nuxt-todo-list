@@ -15,6 +15,8 @@ export const useTask = () => {
 
   const isVisible = ref(false);
 
+  const currentFilter = ref<string>('all');
+
   const newTask = reactive<NewTask>({
     title: '',
     done: false,
@@ -24,8 +26,17 @@ export const useTask = () => {
     return tasks.value.length === 0;
   })
 
+  const filteredTasks = computed(() => {
+    if (currentFilter.value === 'done')
+      return tasks.value.filter((t: Task) => t.done);
+    if (currentFilter.value === 'todo')
+      return tasks.value.filter((t: Task) => !t.done);
+
+    return tasks.value
+  });
+
   const showMessage = (title: string, status: string) => {
-    Object.assign(message, {title, status});
+    Object.assign(message, { title, status });
     isVisible.value = true
 
     setTimeout(() => {
@@ -62,6 +73,7 @@ export const useTask = () => {
           done: newTask.done
         }
       })
+
       tasks.value?.push(res);
 
       // await nextTick(() => document.querySelector('#task--title')?.focus())
@@ -143,6 +155,8 @@ export const useTask = () => {
     toggleDone,
     deleteTask,
     isLoading,
-    isEmpty
+    isEmpty,
+    currentFilter,
+    filteredTasks
   }
 }

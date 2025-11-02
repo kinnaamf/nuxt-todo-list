@@ -27,6 +27,8 @@
         </div>
       </TransitionGroup>
 
+      <TaskFilter v-model="currentFilter"/>
+
       <Transition name="empty">
         <div v-if="showEmptyMessage">
           <h3 class="is-empty">
@@ -36,7 +38,8 @@
       </Transition>
 
       <div class="task-list">
-        <TaskList :tasks="tasks" @edit-task="editTask" @update-task="updateTask" @toggle-done="toggleDone"
+        <TaskList :tasks="filteredTasks"
+                  @edit-task="editTask" @update-task="updateTask" @toggle-done="toggleDone"
                   @delete-task="deleteTask"/>
       </div>
 
@@ -48,6 +51,7 @@
 import TaskButton from '~/components/task/TaskButton.vue';
 import TaskList from '~/components/task/TaskList.vue';
 import MessageToast from "~/components/message/MessageToast.vue";
+import type { Task } from "~/types/task"
 
 onMounted(async () => {
   await getTasks();
@@ -57,7 +61,20 @@ onMounted(async () => {
 })
 
 const {
-  tasks, message, isVisible, newTask, getTasks, storeTask, editTask, updateTask, toggleDone, deleteTask, isLoading, isEmpty
+  tasks,
+  message,
+  isVisible,
+  newTask,
+  getTasks,
+  storeTask,
+  editTask,
+  updateTask,
+  toggleDone,
+  deleteTask,
+  isLoading,
+  isEmpty,
+  currentFilter,
+  filteredTasks
 } = useTask()
 
 const showTitle = ref<boolean>(false);
