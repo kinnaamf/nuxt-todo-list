@@ -1,20 +1,31 @@
 <template>
-  <div class="flex gap-4 items-center">
-    <button @click="emit('update:modelValue', 'all')">
-      <TaskIcon
-          :class="{ 'opacity-100' : modelValue === 'all', 'opacity-40': modelValue !== 'all' }"
-      />
-    </button>
-    <button @click="emit('update:modelValue', 'done')">
-      <CircleCheckIcon
-          :class="{ 'opacity-100' : modelValue === 'done', 'opacity-40': modelValue !== 'done' }"
-      />
-    </button>
-    <button @click="emit('update:modelValue', 'todo')">
-      <CircleXIcon
-          :class="{ 'opacity-100' : modelValue === 'todo', 'opacity-40': modelValue !== 'todo' }"
-      />
-    </button>
+  <div class="flex justify-between">
+    <div>
+      <span>Filters :</span>
+    </div>
+    <div class="flex gap-4 items-center">
+      <button class="filter-btn" @click="emit('update:modelValue', 'all')"
+              :class="{ 'opacity-100' : modelValue === 'all', 'opacity-40': modelValue !== 'all' }"
+      >
+        All
+        <TaskIcon
+        />
+      </button>
+      <button class="filter-btn" @click="emit('update:modelValue', 'done')"
+              :class="{ 'opacity-100' : modelValue === 'done', 'opacity-40': modelValue !== 'done' }"
+      >
+        Completed
+        <CircleCheckIcon
+        />
+      </button>
+      <button class="filter-btn" @click="emit('update:modelValue', 'todo')"
+              :class="{ 'opacity-100' : modelValue === 'todo', 'opacity-40': modelValue !== 'todo' }">
+        To complete
+        <CircleXIcon
+
+        />
+      </button>
+    </div>
   </div>
 </template>
 

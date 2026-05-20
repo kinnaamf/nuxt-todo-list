@@ -10,7 +10,7 @@
     </Transition>
 
     <Transition name="slide-fade">
-      <MessageToast v-if="isVisible" :message="message" :class="messageClass"/>
+      <MessageToast v-if="isVisible" :message="message" :class="messageClass" class="z-50"/>
     </Transition>
 
     <div class="app-container">
@@ -27,12 +27,14 @@
         </div>
       </TransitionGroup>
 
-      <TaskFilter v-model="currentFilter"/>
+      <Transition name="title-slide">
+        <TaskFilter v-model="currentFilter" v-if="showFilter"/>
+      </Transition>
 
       <Transition name="empty">
         <div v-if="showEmptyMessage">
           <h3 class="is-empty">
-            Task list is empty
+            {{ emptyMessage }}
           </h3>
         </div>
       </Transition>
@@ -51,13 +53,13 @@
 import TaskButton from '~/components/task/TaskButton.vue';
 import TaskList from '~/components/task/TaskList.vue';
 import MessageToast from "~/components/message/MessageToast.vue";
-import type { Task } from "~/types/task"
 
 onMounted(async () => {
   await getTasks();
   await nextTick();
   showTitle.value = true
   showTask.value = true
+  showFilter.value = true
 })
 
 const {
@@ -79,8 +81,12 @@ const {
 
 const showTitle = ref<boolean>(false);
 const showTask = ref<boolean>(false);
+const showFilter = ref<boolean>(false);
 
 const showEmptyMessage = computed(() => showTask.value && isEmpty.value && !isLoading.value);
+
+let emptyMessage = ref<string>('Task list is empty');
+
 
 const messageClass = computed(() => {
   return message.status == 'success' ? 'bg-emerald-600' : 'bg-red-600';

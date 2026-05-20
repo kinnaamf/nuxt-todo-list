@@ -23,7 +23,7 @@ input[type="checkbox"]:checked {
 }
 
 .app-container {
-    @apply flex flex-col gap-8 w-2/4 mx-auto relative;
+    @apply flex flex-col gap-8 md:w-2/4 sm:w-3/4 mx-auto relative px-4;
 }
 
 .title {
@@ -32,7 +32,7 @@ input[type="checkbox"]:checked {
 }
 
 .task-container {
-    @apply flex justify-between items-center bg-white px-4 py-4 rounded-md shadow-md;
+    @apply flex gap-2 justify-between items-center bg-white p-4 rounded-md shadow-md;
 }
 
 .task-list {
@@ -98,4 +98,8 @@ input[type="checkbox"]:checked {
 
 .is-empty {
     @apply text-2xl font-semibold text-gray-500 -z-10;
+}
+
+.filter-btn {
+  @apply flex items-center gap-2;
 }

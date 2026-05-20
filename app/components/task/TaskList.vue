@@ -9,7 +9,8 @@
                 @edit-task="$emit('editTask', task)"
                 @update-task="$emit('updateTask', task)"
                 @toggle-done="$emit('toggleDone', task)"
-                @delete-task="$emit('deleteTask', task.id)"/>
+                @delete-task="$emit('deleteTask', task.id)"
+      />
     </div>
   </TransitionGroup>
 </template>

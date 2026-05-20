@@ -12,9 +12,7 @@ export const useTask = () => {
   });
 
   const isLoading = ref<boolean>(false);
-
   const isVisible = ref(false);
-
   const currentFilter = ref<string>('all');
 
   const newTask = reactive<NewTask>({
@@ -23,7 +21,7 @@ export const useTask = () => {
   });
 
   const isEmpty = computed(() => {
-    return tasks.value.length === 0;
+    return filteredTasks.value.length === 0;
   })
 
   const filteredTasks = computed(() => {
@@ -48,13 +46,15 @@ export const useTask = () => {
     isLoading.value = true;
 
     try {
-      tasks.value = await $fetch(`${ api_url }/tasks`);
+      tasks.value = await $fetch<Task[]>(`${ api_url }/tasks`);
+
       isLoading.value = false;
     } catch (e) {
       Object.assign(message, {
         title: 'Could not fetch data',
         status: 'error',
-      })
+      });
+      isLoading.value = false;
     }
   }
 

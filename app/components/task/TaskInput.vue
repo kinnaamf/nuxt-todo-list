@@ -10,7 +10,7 @@ const props = defineProps<{ newTask: NewTask, isVisible: boolean }>()
          @keyup.enter="$emit('store-task', $event)"
          placeholder="Enter new task"
          v-model="newTask.title"
-         class="border border-gray-400 w-10/12 rounded-md py-2 h-10 pl-4">
+         class="border border-gray-400 w-10/12 rounded-md py-2 h-12 pl-4">
 </template>
 
 <style scoped lang="postcss">
