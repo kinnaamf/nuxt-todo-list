@@ -1,12 +1,10 @@
 # Nuxt 3 Collaborative To-Do App
 
-A modern, responsive, and collaborative task management application built with **Nuxt 3** and **TypeScript**. It features live synchronization via a shared backend and offline-first resilience using LocalStorage.
+A modern, responsive, and collaborative task management application built with **Nuxt 4** and **TypeScript**. It features live synchronization via a shared backend and resilience using LocalStorage.
 
 ## Features
 *   **Real-time Collaboration:** Shared backend allowing multiple users/devices to sync tasks.
-*   **Offline Support:** Custom composable hooks that cache tasks in `LocalStorage` during network failure.
 *   **Modern UI:** Beautiful transitions and styles built with Tailwind CSS.
-
 ---
 
 ## Getting Started
